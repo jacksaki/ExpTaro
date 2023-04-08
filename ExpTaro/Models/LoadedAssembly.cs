@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MessagePack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,10 +11,15 @@ namespace ExpTaro.Models
 {
     public class LoadedAssembly : AssemblyBase
     {
-        public LoadedAssembly(Assembly asm) : base(asm)
+        public LoadedAssembly(string path) : base(path)
         {
+            this.Path = path;
         }
 
+        public string Path
+        {
+            get;
+        }
         public override bool IsGlobal
         {
             get

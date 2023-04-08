@@ -1,10 +1,12 @@
 ﻿using Livet;
+using MessagePack;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +18,6 @@ namespace ExpTaro.Models
         public GlobalAssembly(Assembly asm):base(asm)
         {
         }
-
         public override bool IsGlobal
         {
             get
@@ -24,20 +25,17 @@ namespace ExpTaro.Models
                 return true;
             }
         }
-
-        private static void LoadDefaultAssemblies()
-        {
-
-        }
+        private static List<GlobalAssembly> _assemblies = null;
         public static IEnumerable<GlobalAssembly> GetAll()
         {
-            var asm = typeof(Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlRetryingExecutionStrategy).Assembly;
-            var globalAssemblies = new Lazy<List<GlobalAssembly>>(() =>
+            if (_assemblies != null)
             {
-                return AssemblyLoadContext.Default.Assemblies
-                    .Select(a => new GlobalAssembly(a)).ToList();
-            });
-            return globalAssemblies.Value.OrderBy(x=>x.Assembly.FullName);
+                return _assemblies.OrderBy(x => x.Assembly.FullName); 
+            }
+            var asm = typeof(Npgsql.EntityFrameworkCore.PostgreSQL.NpgsqlRetryingExecutionStrategy).Assembly;
+
+            _assemblies = AssemblyLoadContext.Default.Assemblies.Select(a => new GlobalAssembly(a)).ToList();
+            return _assemblies.OrderBy(x=>x.Assembly.FullName);
         }
 
     }

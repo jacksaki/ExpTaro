@@ -26,6 +26,47 @@ namespace ExpTaro.ViewModels
         public SettingsBoxViewModel(MainWindowViewModel parent) : base()
         {
             this.Parent = parent;
+            this.ImportsText = string.Join("\r\n", this.Project.Settings.Imports);
+
+            parent.ProjectLoaded += (sender, e) =>
+            {
+                this.ImportsText = string.Join("\r\n", this.Project.Settings.Imports);
+            };
+        }
+        public DbProject Project
+        {
+            get
+            {
+                return this.Parent.Project;
+            }
+        }
+        private void SetImports()
+        {
+            this.Project.Settings.Imports.Clear();
+            foreach(var line in this.ImportsText.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Where(x => !string.IsNullOrEmpty(x)))
+            {
+                this.Project.Settings.Imports.Add(line); 
+            }
+        }
+
+        private string _ImportsText;
+
+        public string ImportsText
+        {
+            get
+            {
+                return _ImportsText;
+            }
+            set
+            { 
+                if (_ImportsText == value)
+                {
+                    return;
+                }
+                _ImportsText = value;
+                SetImports();
+                RaisePropertyChanged();
+            }
         }
 
         private bool _IsLoadingGlobalAssemblies;
@@ -70,11 +111,11 @@ namespace ExpTaro.ViewModels
                 {
                     DisplayName = ".NET アセンブリ(*.dll)",
                 };
-                filter.Extensions.Add("cs");
+                filter.Extensions.Add("dll");
                 dlg.Filters.Add(filter);
                 if (dlg.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    this.Settings.LoadedAssemblies.Add(new LoadedAssembly(System.Reflection.Assembly.LoadFrom(dlg.FileName)));
+                    this.Settings.LoadedAssemblies.Add(new LoadedAssembly(dlg.FileName));
                 }
             }
         }

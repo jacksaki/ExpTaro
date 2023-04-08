@@ -22,9 +22,6 @@
 WindowState="Maximized"
     >
 
-    <Window.DataContext>
-        <vm:MainWindowViewModel />
-    </Window.DataContext>
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Margin" Value="5"/>
@@ -54,7 +51,19 @@ WindowState="Maximized"
     </behaviors:Interaction.Triggers>
 
     <Grid>
-        <wpf:Card>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBar>
+            <Button Command="{Binding SaveProjectCommand}" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                <wpf:PackIcon Kind="Floppy" Width="32" Height="32"/>
+            </Button>
+            <Button Command="{Binding LoadProjectCommand}" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+                <wpf:PackIcon Kind="FileDocumentOutline" Width="32" Height="32"/>
+            </Button>
+        </ToolBar>
+        <wpf:Card Grid.Row="1">
             <TabControl
                 wpf:NavigationRailAssist.ShowSelectionBackground="True"
                 SnapsToDevicePixels="True"

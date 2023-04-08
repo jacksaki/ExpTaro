@@ -57,7 +57,7 @@
         </GroupBox>
 
         <GroupBox Grid.Row="1"  Header="Imports" Margin="4">
-            <TextBox Margin="4" AcceptsReturn="True" VerticalContentAlignment="Top" Text="{Binding ImportsText}"/>
+            <TextBox Margin="4" AcceptsReturn="True" VerticalContentAlignment="Top" Text="{Binding ImportsText,Mode=TwoWay}"/>
         </GroupBox>
 
     </Grid>

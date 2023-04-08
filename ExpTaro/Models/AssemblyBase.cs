@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Livet;
+using MessagePack;
+
 namespace ExpTaro.Models
 {
     public abstract class AssemblyBase: NotificationObject
@@ -12,6 +15,11 @@ namespace ExpTaro.Models
         protected AssemblyBase(Assembly asm) 
         {
             this.Assembly = asm;
+            this.IsSelected = false;
+        }
+        protected AssemblyBase(string path)
+        {
+            this.Assembly = System.Reflection.Assembly.LoadFile(path);
             this.IsSelected = false;
         }
 
@@ -36,6 +44,13 @@ namespace ExpTaro.Models
             }
         }
 
+        public string Name
+        {
+            get
+            {
+                return this.Assembly.FullName;
+            }
+        }
         public Assembly Assembly
         {
             get;

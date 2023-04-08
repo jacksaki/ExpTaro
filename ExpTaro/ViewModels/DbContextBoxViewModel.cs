@@ -29,6 +29,11 @@ namespace ExpTaro.ViewModels
             {
                 RaisePropertyChanged(nameof(SourceTextDocument));
             };
+            this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText;
+            parent.ProjectLoaded += (sender, e) =>
+            {
+                this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText;
+            };
         }
         public MainWindowViewModel Parent
         {
@@ -61,7 +66,7 @@ namespace ExpTaro.ViewModels
             }
         }
 
-        public async void OpenFile()
+        public void OpenFile()
         {
             using (var dlg = new CommonOpenFileDialog())
             {
@@ -75,7 +80,7 @@ namespace ExpTaro.ViewModels
                 if(dlg.ShowDialog()== CommonFileDialogResult.Ok)
                 {
                     this.Project.DatabaseContext.Path=dlg.FileName;
-                    await this.Project.DatabaseContext.LoadSourceAsync();
+                    this.Project.DatabaseContext.LoadSource();
                     this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText;
                 }
             }

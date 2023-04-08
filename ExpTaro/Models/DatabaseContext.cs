@@ -6,11 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using System.Runtime.Serialization;
+using System.Xml.Linq;
+using MessagePack;
+
 namespace ExpTaro.Models
 {
     public class DatabaseContext:NotificationObject
     {
-
         private string _Path;
 
         public string Path
@@ -49,9 +52,12 @@ namespace ExpTaro.Models
             }
         }
 
-        public async Task LoadSourceAsync()
+        public void LoadSource()
         {
-            this.SourceText = await System.IO.File.ReadAllTextAsync(this.Path); 
+            if (System.IO.File.Exists(this.Path))
+            {
+                this.SourceText = System.IO.File.ReadAllText(this.Path);
+            }
         }
     }
 }

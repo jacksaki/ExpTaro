@@ -1,7 +1,9 @@
 ﻿using Livet;
+using MessagePack;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +20,6 @@ namespace ExpTaro.Models
         }
 
         private string _Path;
-
         public string Path
         {
             get
@@ -39,7 +40,6 @@ namespace ExpTaro.Models
 
 
         private string _SourceText;
-
         public string SourceText
         {
             get
@@ -57,9 +57,12 @@ namespace ExpTaro.Models
             }
         }
 
-        public async Task LoadSourceAsync()
+        public void LoadSource()
         {
-            this.SourceText = await System.IO.File.ReadAllTextAsync(this.Path);
+            if (System.IO.File.Exists(this.Path))
+            {
+                this.SourceText = System.IO.File.ReadAllText(this.Path);
+            }
         }
     }
 }

@@ -1,0 +1,17 @@
+{
+  "assemblies": {
+    "defaults": {
+    }
+  },
+  "imports": [
+    "System",
+    "System.Collections.Generic",
+    "System.Linq"
+  ],
+  "sources": {
+    "db_context": "",
+    "tables": {
+
+    }
+  }
+}

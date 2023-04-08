@@ -16,17 +16,19 @@ namespace ExpTaro.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
+        public event EventHandler ProjectLoaded = delegate { };
         public async void Initialize()
         {
-            await this.Project.Settings.InitializeAsync();
         }
         public DbProject Project
         {
             get;
+            private set;
         }
+        
         public MainWindowViewModel() : base()
         {
-            this.Project = new DbProject();
+            LoadProject();
             this.Project.PropertyChanged += (sender, e) => { RaisePropertyChanged(nameof(Project)); };
             this.DbContextBoxViewModel = new DbContextBoxViewModel(this);
             this.DbContextBoxViewModel.ErrorOccurred += ViewModel_ErrorOccurred;
@@ -48,6 +50,48 @@ namespace ExpTaro.ViewModels
         {
             this.MessageQueue.Enqueue(e.Message);
         }
+
+
+        private ViewModelCommand _SaveProjectCommand;
+
+        public ViewModelCommand SaveProjectCommand
+        {
+            get
+            {
+                if (_SaveProjectCommand == null)
+                {
+                    _SaveProjectCommand = new ViewModelCommand(SaveProject);
+                }
+                return _SaveProjectCommand;
+            }
+        }
+
+        public void SaveProject()
+        {
+            this.Project.Save();
+        }
+
+
+        private ViewModelCommand _LoadProjectCommand;
+
+        public ViewModelCommand LoadProjectCommand
+        {
+            get
+            {
+                if (_LoadProjectCommand == null)
+                {
+                    _LoadProjectCommand = new ViewModelCommand(LoadProject);
+                }
+                return _LoadProjectCommand;
+            }
+        }
+
+        public void LoadProject()
+        {
+            this.Project = DbProject.Load();
+            this.ProjectLoaded(this, EventArgs.Empty);
+        }
+
 
         public MaterialDesignThemes.Wpf.SnackbarMessageQueue MessageQueue
         {

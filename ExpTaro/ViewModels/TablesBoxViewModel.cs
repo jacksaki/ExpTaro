@@ -114,7 +114,7 @@ namespace ExpTaro.ViewModels
             }
         }
 
-        public async void AddTable()
+        public void AddTable()
         {
             using (var dlg = new CommonOpenFileDialog())
             {
@@ -132,7 +132,7 @@ namespace ExpTaro.ViewModels
                     {
                         var table = new TableSource();
                         table.Path = file;
-                        await table.LoadSourceAsync();
+                        table.LoadSource();
                         this.Project.Tables.Add(table);
                         this.SelectedTable = table;
                     }
