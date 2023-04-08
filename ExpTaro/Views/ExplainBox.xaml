@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="ExpTaro.Views.ExplainBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:mahApps="http://metro.mahapps.com/winfx/xaml/controls"
+    xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExpTaro.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="ソース" Margin="4">
+                <Grid>
+                    <avalon:TextEditor Margin="4" ShowLineNumbers="True" FontFamily="BIZ UDGothic" SyntaxHighlighting="C#" Document="{Binding SourceTextDocument}"/>
+                    <Button Margin="10" Command="{Binding ExecuteCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                        <wpf:PackIcon Kind="LightningBolt"/>
+                    </Button>
+                </Grid>
+            </GroupBox>
+            <TabControl
+                Margin="4"
+                Grid.Column="2"
+                wpf:NavigationRailAssist.ShowSelectionBackground="True"
+                SnapsToDevicePixels="True"
+                Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+                TabStripPlacement="Top">
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Width="Auto" Height="Auto">
+                            <wpf:PackIcon
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Center"
+                                Kind="FileDocument" />
+                            <TextBlock HorizontalAlignment="Center" Text="ログ" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <ListView Margin="4" ItemsSource="{Binding Executor.Logs}">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="種類" DisplayMemberBinding="{Binding Type}"/>
+                                    <GridViewColumn Header="テキスト" DisplayMemberBinding="{Binding Text}"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
+                <TabItem>
+                    <TabItem.Header>
+                        <StackPanel Width="Auto" Height="Auto">
+                            <wpf:PackIcon
+                                Width="32"
+                                Height="32"
+                                HorizontalAlignment="Center"
+                                Kind="SqlQuery" />
+                            <TextBlock HorizontalAlignment="Center" Text="SQL" />
+                        </StackPanel>
+                    </TabItem.Header>
+                    <avalon:TextEditor Margin="4" ShowLineNumbers="True" FontFamily="BIZ UDGothic" SyntaxHighlighting="SQL" Document="{Binding SQLDocument}"/>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <GridSplitter Grid.Row="1" Height="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <ListView Grid.Row="2" ItemsSource="{Binding Project.ExplainPlan}">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn/>
+                        <GridViewColumn/>
+                        <GridViewColumn/>
+                        <GridViewColumn/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</UserControl>
