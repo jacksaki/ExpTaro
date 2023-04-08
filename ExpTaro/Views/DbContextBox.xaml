@@ -19,8 +19,8 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBox Width="400" Text="{Binding Project.DatabaseContext.Path,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                              wpf:HintAssist.Hint="DbContextのパス" Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-                    <Button Command="{Binding OpenFileCommand}" Style="{StaticResource MaterialDesignRaisedLightButton}">
-                        <wpf:PackIcon Kind="FileSearchOutline"/>
+                    <Button Height="50" Margin="4" Command="{Binding OpenFileCommand}" wpf:ElevationAssist.Elevation="Dp3" Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
+                        <wpf:PackIcon Kind="FileSearchOutline" Width="28" Height="28"/>
                     </Button>
                 </StackPanel>
                 <wpf:Card Grid.Row="1" Margin="4">

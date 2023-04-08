@@ -16,8 +16,9 @@ namespace ExpTaro.ViewModels
 {
     public class MainWindowViewModel : ViewModel
     {
-        public void Initialize()
+        public async void Initialize()
         {
+            await this.Project.Settings.InitializeAsync();
         }
         public DbProject Project
         {

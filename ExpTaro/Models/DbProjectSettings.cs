@@ -6,18 +6,37 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace ExpTaro.Models
 {
     public class DbProjectSettings:NotificationObject
     {
-        public ObservableCollection<Assembly> Assemblies
+        public async Task InitializeAsync()
+        {
+            await System.Threading.Tasks.Task.Run(() =>
+            {
+                this.GlobalAssemblies.Clear();
+                foreach (var asm in GlobalAssembly.GetAll())
+                {
+                    this.GlobalAssemblies.Add(asm);
+                }
+                RaisePropertyChanged(nameof(GlobalAssemblies));
+            });
+        }
+        public DispatcherCollection<GlobalAssembly> GlobalAssemblies
         {
             get;
-        } = new ObservableCollection<Assembly>();
-        public ObservableCollection<string> Imports
+        } = new DispatcherCollection<GlobalAssembly>(DispatcherHelper.UIDispatcher);
+        public DispatcherCollection<LoadedAssembly> LoadedAssemblies
         {
             get;
-        } = new ObservableCollection<string>();
+        } = new DispatcherCollection<LoadedAssembly>(DispatcherHelper.UIDispatcher);
+
+        public DispatcherCollection<string> Imports
+        {
+            get;
+        } = new DispatcherCollection<string>(DispatcherHelper.UIDispatcher);
+
     }
 }

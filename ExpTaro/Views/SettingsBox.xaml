@@ -10,27 +10,49 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="400"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <GroupBox Header="Reference" Margin="4">
             <Grid>
-                <ListView ItemsSource="{Binding Project.Settings.Assemblies}">
-                    <ListView.View>
-                        <GridView>
-                            <GridView.Columns>
-                                <GridViewColumn Header="名前" DisplayMemberBinding="{Binding Name}"/>
-                            </GridView.Columns>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,10,80,10" Command="{Binding AddAssemblyCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
-                    <wpf:PackIcon Kind="Add"/>
-                </Button>
-                <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,10,10,10" Command="{Binding RemoveSelectedAssemblyCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
-                    <wpf:PackIcon Kind="Minus"/>
-                </Button>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <ScrollViewer>
+                        <ListBox ItemsSource="{Binding Settings.GlobalAssemblies}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <ToggleButton IsChecked="{Binding IsSelected,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBlock VerticalAlignment="Center" Text="{Binding Assembly.FullName}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </ScrollViewer>
+                </Grid>
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+                <Grid Grid.Column="2">
+                    <ListView ItemsSource="{Binding Settings.LoadedAssemblies}">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn Header="名前" DisplayMemberBinding="{Binding Name}"/>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,10,80,10" Command="{Binding AddAssemblyCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
+                        <wpf:PackIcon Kind="FileDocumentAdd" Width="32" Height="32"/>
+                    </Button>
+                    <Button HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10,10,10,10" Command="{Binding RemoveSelectedAssemblyCommand}" Style="{StaticResource MaterialDesignFloatingActionAccentButton}">
+                        <wpf:PackIcon Kind="FileDocumentDelete" Width="32" Height="32" />
+                    </Button>
+                </Grid>
             </Grid>
         </GroupBox>
 

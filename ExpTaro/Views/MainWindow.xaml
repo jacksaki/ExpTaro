@@ -98,8 +98,8 @@ WindowState="Maximized"
                             <TextBlock HorizontalAlignment="Center" Text="設定" />
                         </StackPanel>
                     </TabItem.Header>
+                    <v:SettingsBox DataContext="{Binding SettingsBoxViewModel}"/>
                 </TabItem>
-                <v:SettingsBox DataContext="{Binding SettingsBoxViewModel}"/>
             </TabControl>
         </wpf:Card>
     </Grid>

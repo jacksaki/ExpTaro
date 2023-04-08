@@ -22,11 +22,20 @@ namespace ExpTaro.ViewModels
         public ExplainBoxViewModel(MainWindowViewModel parent) : base()
         {
             this.Parent = parent;
+            this.SourceTextDocument.TextChanged += (sender, e) =>
+            {
+                RaisePropertyChanged(nameof(SourceTextDocument));
+            }; 
         }
         public MainWindowViewModel Parent
         {
             get;
         }
+
+        public ICSharpCode.AvalonEdit.Document.TextDocument SourceTextDocument
+        {
+            get;
+        } = new ICSharpCode.AvalonEdit.Document.TextDocument();
         public CSharpExecutor Executor
         {
             get;

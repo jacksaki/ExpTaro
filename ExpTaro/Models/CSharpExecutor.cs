@@ -23,7 +23,10 @@ namespace ExpTaro.Models
         public async Task ExecuteAsync(DbProject project)
         {
             this.Logs.Clear();
-            var option = ScriptOptions.Default.AddReferences(project.Settings.Assemblies).AddImports(project.Settings.Imports);
+            var option = ScriptOptions.Default.
+                AddReferences(project.Settings.GlobalAssemblies.Where(x=>x.IsSelected).Select(x=>x.Assembly)).
+                AddReferences(project.Settings.LoadedAssemblies.Where(x=>x.IsSelected).Select(x=>x.Assembly)).
+                AddImports(project.Settings.Imports);
             var script = CSharpScript.Create(project.QuerySource, options: option);
             using (var rd = new OutputRedirector())
             {

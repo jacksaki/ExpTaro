@@ -7,6 +7,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Samples\AppDbContext.cs" />
+    <Compile Remove="Samples\OrderDetails.cs" />
+    <Compile Remove="Samples\Orders.cs" />
+    <Compile Remove="Samples\Products.cs" />
+    <Compile Remove="Samples\Users.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Samples\AppDbContext.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\OrderDetails.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Orders.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Products.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Samples\Users.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
     <PackageReference Include="Enums.NET" Version="4.0.1" />
     <PackageReference Include="LivetCask" Version="4.0.1" />
