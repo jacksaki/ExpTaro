@@ -29,10 +29,10 @@ namespace ExpTaro.ViewModels
             {
                 RaisePropertyChanged(nameof(SourceTextDocument));
             };
-            this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText;
+            this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText ?? "";
             parent.ProjectLoaded += (sender, e) =>
             {
-                this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText;
+                this.SourceTextDocument.Text = this.Project.DatabaseContext.SourceText ?? "";
             };
         }
         public MainWindowViewModel Parent

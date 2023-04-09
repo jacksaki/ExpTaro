@@ -37,7 +37,7 @@
                 </Grid>
                 <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                 <Grid Grid.Column="2">
-                    <ListView ItemsSource="{Binding Settings.LoadedAssemblies}">
+                    <ListView ItemsSource="{Binding Settings.LoadedAssemblies}" SelectedItem="{Binding SelectedAssembly,Mode=Twoway,UpdateSourceTrigger=PropertyChanged}">
                         <ListView.View>
                             <GridView>
                                 <GridView.Columns>

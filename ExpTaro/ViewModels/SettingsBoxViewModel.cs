@@ -69,6 +69,52 @@ namespace ExpTaro.ViewModels
             }
         }
 
+
+        private LoadedAssembly _SelectedAssembly;
+
+        public LoadedAssembly SelectedAssembly
+        {
+            get
+            {
+                return _SelectedAssembly;
+            }
+            set
+            { 
+                if (_SelectedAssembly == value)
+                {
+                    return;
+                }
+                _SelectedAssembly = value;
+                RemoveSelectedAssemblyCommand.RaiseCanExecuteChanged();
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private ViewModelCommand _RemoveSelectedAssemblyCommand;
+
+        public ViewModelCommand RemoveSelectedAssemblyCommand
+        {
+            get
+            {
+                if (_RemoveSelectedAssemblyCommand == null)
+                {
+                    _RemoveSelectedAssemblyCommand = new ViewModelCommand(RemoveSelectedAssembly, CanRemoveSelectedAssembly);
+                }
+                return _RemoveSelectedAssemblyCommand;
+            }
+        }
+
+        public bool CanRemoveSelectedAssembly()
+        {
+            return this.SelectedAssembly != null;
+        }
+
+        public void RemoveSelectedAssembly()
+        {
+            this.Settings.LoadedAssemblies.Remove(this.SelectedAssembly);
+        }
+
         private bool _IsLoadingGlobalAssemblies;
 
         public bool  IsLoadingGlobalAssemblies

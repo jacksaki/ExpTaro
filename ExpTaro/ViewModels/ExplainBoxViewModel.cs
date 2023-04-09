@@ -24,6 +24,8 @@ namespace ExpTaro.ViewModels
             this.Parent = parent;
             this.SourceTextDocument.TextChanged += (sender, e) =>
             {
+                this.Project.QuerySource = this.SourceTextDocument.Text;
+                ExecuteCommand.RaiseCanExecuteChanged();
                 RaisePropertyChanged(nameof(SourceTextDocument));
             }; 
         }
@@ -39,7 +41,53 @@ namespace ExpTaro.ViewModels
         public CSharpExecutor Executor
         {
             get;
-            private set;
+        } = new CSharpExecutor();
+
+
+        private ViewModelCommand _ExecuteCommand;
+
+        public ViewModelCommand ExecuteCommand
+        {
+            get
+            {
+                if (_ExecuteCommand == null)
+                {
+                    _ExecuteCommand = new ViewModelCommand(Execute, CanExecute);
+                }
+                return _ExecuteCommand;
+            }
         }
+        public DbProject Project
+        {
+            get
+            {
+                return this.Parent.Project;
+            }
+        }
+        public bool CanExecute()
+        {
+            try
+            {
+                this.Project.Validate();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public async void Execute()
+        {
+            try
+            {
+                await this.Executor.ExecuteAsync(this.Project);
+            }
+            catch (Exception ex)
+            {
+                this.ErrorOccurred(this, new ErrorOccurredEventArgs(ex.Message, ex));
+            }
+        }
+
     }
 }

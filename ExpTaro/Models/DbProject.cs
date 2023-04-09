@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,15 @@ namespace ExpTaro.Models
         {
             var json = new DbProjectConverter().ConvertToJson(this);
             System.IO.File.WriteAllText(JsonPath, json);
+        }
+
+        internal void Validate()
+        {
+            if(string.IsNullOrWhiteSpace(this.QuerySource))
+            {
+                throw new ArgumentException("Query Source is null.");
+            }
+
         }
 
         public DatabaseContext DatabaseContext

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Loader;
 
@@ -8,6 +10,7 @@ namespace ExpTaro.SampleDbApp
     {
         static void Main(string[] args)
         {
+            var hoge = new AppDbContext().Users.AsNoTracking().ToList();
             AssemblyLoadContext.Default.Resolving += (AssemblyLoadContext context, AssemblyName assembly) => {
                 Console.WriteLine($"Resolving {assembly.FullName}");
                 return null;

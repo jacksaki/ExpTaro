@@ -5,6 +5,7 @@ using Livet.EventListeners;
 using Livet.Messaging;
 using Livet.Messaging.IO;
 using Livet.Messaging.Windows;
+using Microsoft.CodeAnalysis.Scripting;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,8 +18,10 @@ namespace ExpTaro.ViewModels
     public class MainWindowViewModel : ViewModel
     {
         public event EventHandler ProjectLoaded = delegate { };
-        public async void Initialize()
+
+        public void Initialize()
         {
+
         }
         public DbProject Project
         {
@@ -28,6 +31,7 @@ namespace ExpTaro.ViewModels
         
         public MainWindowViewModel() : base()
         {
+            this.DialogCoordinator = MahApps.Metro.Controls.Dialogs.DialogCoordinator.Instance;
             LoadProject();
             this.Project.PropertyChanged += (sender, e) => { RaisePropertyChanged(nameof(Project)); };
             this.DbContextBoxViewModel = new DbContextBoxViewModel(this);
@@ -101,7 +105,16 @@ namespace ExpTaro.ViewModels
 
         private void ViewModel_ErrorOccurred(object sender, ErrorOccurredEventArgs e)
         {
-            DialogCoordinator.ShowMessageAsync(this, e.Message, "エラー");
+            if(e.Exception is CompilationErrorException)
+            {
+                var ce = (CompilationErrorException)e.Exception;
+                var msg = string.Join("\r\n", ce.Diagnostics.Select(x => $"{x.Location} {x.GetMessage()}"));
+                DialogCoordinator.ShowMessageAsync(this, "エラー", msg );
+            }
+            else
+            {
+                DialogCoordinator.ShowMessageAsync(this, "エラー",e.Message);
+            }
         }
 
         public MahApps.Metro.Controls.Dialogs.IDialogCoordinator DialogCoordinator

@@ -1,4 +1,5 @@
 ﻿using Livet;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using System;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Interop;
 
 namespace ExpTaro.Models
 {
@@ -23,11 +25,37 @@ namespace ExpTaro.Models
         public async Task ExecuteAsync(DbProject project)
         {
             this.Logs.Clear();
-            var option = ScriptOptions.Default.
-                AddReferences(project.Settings.GlobalAssemblies.Where(x=>x.IsSelected).Select(x=>x.Assembly)).
-                AddReferences(project.Settings.LoadedAssemblies.Where(x=>x.IsSelected).Select(x=>x.Assembly)).
+
+            var scriptOptions = ScriptOptions.Default.
+                AddReferences(project.Settings.GlobalAssemblies.Where(x => x.IsSelected).Select(x => x.Assembly)).
+                AddReferences(project.Settings.LoadedAssemblies.Select(x => x.Assembly)).
                 AddImports(project.Settings.Imports);
-            var script = CSharpScript.Create(project.QuerySource, options: option);
+            var sb = new System.Text.StringBuilder();
+            if(!string.IsNullOrWhiteSpace(project.DatabaseContext.SourceText))
+            {
+                sb.AppendLine(project.DatabaseContext.SourceText);
+            }
+            foreach(var table in project.Tables)
+            {
+                if(!string.IsNullOrWhiteSpace(table.SourceText))
+                {
+                    sb.AppendLine(table.SourceText);
+                }
+            }
+            var script = CSharpScript.Create(sb.ToString(), scriptOptions);
+            script = script.ContinueWith(project.QuerySource);
+            var compilation = script.GetCompilation();
+            var errors = compilation.GetDiagnostics().Where(d => d.Severity == DiagnosticSeverity.Error);
+            if (errors.Any())
+            {
+                foreach (var error in errors)
+                {
+                    Logs.Add(new LogItem($"{error.Location} {error.GetMessage()}", LogType.Error));
+                }
+                return;
+            }
+
+
             using (var rd = new OutputRedirector())
             {
                 rd.StandardOutputWritten += (sender, e) =>
@@ -38,7 +66,22 @@ namespace ExpTaro.Models
                 {
                     Logs.Add(new LogItem(e.Text, LogType.Error));
                 };
-                await script.RunAsync();
+                try
+                {
+                    var state = await script.RunAsync();
+                }
+                catch (CompilationErrorException ce)
+                {
+                    foreach(var msg in ce.Diagnostics)
+                    {
+                        Logs.Add(new LogItem($"{msg.Location} {msg.GetMessage()}", LogType.Error));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logs.Add(new LogItem(ex.Message, LogType.Error));
+                    Logs.Add(new LogItem(ex.StackTrace, LogType.Error));
+                }
             }
         }
         public DispatcherCollection<LogItem> Logs
